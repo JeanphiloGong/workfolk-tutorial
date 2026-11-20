@@ -6,7 +6,8 @@ other's work.
 
 The handbook and the runnable project are separate repositories:
 
-- [`../workfolk`](../workfolk) contains the Python runtime.
+- [`../workfolk`](../workfolk) contains the TypeScript runtime and Pi
+  integration.
 - This repository explains the design, contracts, version checkpoints, and
   verification scenarios used to build that runtime.
 

@@ -10,7 +10,7 @@ use permitted tools, and change its plan after observing an Event.
 | --- | --- |
 | `id` | Stable identity across Activities and Executions |
 | `capabilities` | Operations and tool classes the Agent may use |
-| `controller` | Human, scripted, supervisor, or model-backed decision policy |
+| `controller` | Human, scripted, supervisor, or Pi-backed decision policy |
 | `private_context` | Current plan, conversation context, and intermediate data |
 | `current_activity` | The visible Activity currently being pursued |
 | `status` | `idle`, `deciding`, `working`, `waiting`, `blocked`, or `offline` |
@@ -40,6 +40,13 @@ The same Agent contract supports different controllers:
 - a human controller supplies actions through the viewer;
 - a scripted controller makes deterministic decisions for tests;
 - a supervisor controller proposes goals and Activities;
-- a model-backed controller chooses actions through an SDK.
+- a Pi-backed controller chooses actions through the existing Agent SDK.
 
 Changing a controller does not change the shared-world rules.
+
+## Pi Boundary
+
+Pi owns model sessions, tool registration, and the controller's private
+execution context. Workfolk receives a verified controller result through its
+`Action` boundary. Pi callbacks cannot write `WorldState` directly, publish an
+Artifact without validation, or bypass resource and budget checks.

@@ -18,7 +18,8 @@ boundary verifies what happened.
 | `complete_activity` | Requests completion after its acceptance conditions hold |
 
 The environment checks the caller, capability, Activity state, resource
-availability, and required inputs before applying an action.
+availability, and required inputs before applying an action. A Pi tool call is
+an input to this boundary, not a direct write to the world.
 
 ## Events
 

@@ -70,7 +70,10 @@ V0 decisions include:
 - Long-running work is asynchronous at the world boundary.
 - A player can intervene without pretending that an animation or message means
   a real execution completed.
-- The first runtime uses deterministic fake tools and no external side effects.
+- The first runtime uses deterministic fake controllers and tools with no
+  external side effects. The runtime uses the Pi Agent framework at its
+  controller and tool boundary, while world rules remain independent of model
+  calls.
 
 V0 acceptance means the contracts explain ownership, valid transitions,
 failure paths, and the next implementation checks. It does not mean runtime
@@ -84,7 +87,7 @@ behavior exists.
 | V2 | V1 runtime | Two autonomous Agents sharing a resource and observing each other's events | LLMs, browsers, persistent database | One Agent waits or changes activity when the resource is occupied; the other continues |
 | V3 | V2 runtime | Dynamic activities, optional dependencies, and a supervisor Agent | Human UI, real publishing | A result can open a new activity while an independent activity continues |
 | V4 | V3 runtime | Durable event journal, execution history, and deterministic replay | Automatic recovery of unknown external side effects | Replaying the journal reconstructs the same shared facts and artifacts |
-| V5 | V4 runtime | Real tool adapter and model-backed controller behind the same Agent contract | Social-platform publishing | A real tool result enters the world only through a verified event and artifact |
+| V5 | V4 runtime | Real tool adapter and Pi-backed controller behind the same Agent contract | Social-platform publishing | A real tool result enters the world only through a verified event and artifact |
 | V6 | V5 runtime | Player controls, messages, pause, reassignment, and artifact editing | Multiplayer deployment | A player intervention changes a later Agent input and preserves prior history |
 | V7 | V6 runtime | Social-media adapter for research, writing, review, and optional publishing | Making social-media the runtime's domain model | One real content goal can use Workfolk coordination while social artifacts keep their own contract |
 
@@ -106,8 +109,8 @@ artifact without running the Agent loop does not satisfy V1.
 ## V0 Implementation Handoff
 
 The current runtime baseline is the sibling repository
-`../workfolk`. It contains `pyproject.toml`, the importable package at
-`src/workfolk/__init__.py`, and no domain behavior. V0 therefore ends with
+`../workfolk`. It contains `package.json`, the TypeScript package at
+`src/workfolk/index.ts`, and no domain behavior. V0 therefore ends with
 design readiness. It does not claim that the first scenario already runs.
 
 The backend module owns the world rules and the shared contracts. Proposed
@@ -115,11 +118,11 @@ implementation targets are relative to `workfolk/`:
 
 | Version | Runtime targets | Reader check |
 | --- | --- | --- |
-| V1 | `src/workfolk/model.py`, `src/workfolk/world.py`, `src/workfolk/agents.py`, `tests/test_v1_single_agent.py` | A scripted Agent selects one Activity, runs the deterministic source tool, publishes one Artifact, and emits the expected events |
-| V2 | `src/workfolk/resources.py`, `src/workfolk/world.py`, `src/workfolk/agents.py`, `tests/test_v2_shared_resource.py` | Two Agents observe one exclusive resource; the losing Agent waits or changes Activity while the other continues |
-| V3 | `src/workfolk/supervisor.py`, `src/workfolk/activities.py`, `tests/test_v3_dynamic_activities.py` | An Artifact event opens a new Activity while an unrelated Activity remains runnable |
-| V4 | `src/workfolk/journal.py`, `src/workfolk/replay.py`, `tests/test_v4_replay.py` | A saved event journal reconstructs the same state and Artifact versions in a separate process |
-| V5 | `src/workfolk/tools.py`, `src/workfolk/controllers.py`, `tests/test_v5_tool_boundary.py` | A model-backed controller can request a tool, but only a verified tool result can publish a world event |
+| V1 | `src/workfolk/model.ts`, `src/workfolk/world.ts`, `src/workfolk/agents.ts`, `tests/test_v1_single_agent.mjs` | A scripted Agent selects one Activity, runs the deterministic source tool, publishes one Artifact, and emits the expected events |
+| V2 | `src/workfolk/resources.ts`, `src/workfolk/world.ts`, `src/workfolk/agents.ts`, `tests/test_v2_shared_resource.mjs` | Two Agents observe one exclusive resource; the losing Agent waits or changes Activity while the other continues |
+| V3 | `src/workfolk/supervisor.ts`, `src/workfolk/activities.ts`, `tests/test_v3_dynamic_activities.mjs` | An Artifact event opens a new Activity while an unrelated Activity remains runnable |
+| V4 | `src/workfolk/journal.ts`, `src/workfolk/replay.ts`, `tests/test_v4_replay.mjs` | A saved event journal reconstructs the same state and Artifact versions in a separate process |
+| V5 | `src/workfolk/tools.ts`, `src/workfolk/controllers.ts`, `src/workfolk/pi-controller.ts`, `tests/test_v5_tool_boundary.mjs` | A Pi-backed controller can request a tool, but only a verified tool result can publish a world event |
 
 Each version keeps the previous version's public model and event semantics. The
 runtime may change its internal storage when a version requires it, but the
@@ -137,10 +140,11 @@ does not replace those domain contracts.
 V0 is ready for the implementation tutorial when the three contract documents
 and this plan agree on Agent ownership, Activity lifecycle, resource
 reservation, Artifact immutability, asynchronous Execution results, failure
-events, and the V1 check above. The initial runtime remains deliberately free
-of SDK, browser, database, and network dependencies. A later implementation
-checkpoint may add those boundaries only when its version includes a concrete
-reader check.
+events, and the V1 check above. The initial world implementation remains free
+of browser, database, and network effects. The runtime package records the
+existing Pi dependency so the V5 controller can use the established framework.
+A later implementation checkpoint may invoke Pi or another external tool only
+when its version includes a concrete reader check.
 
 ## Boundary With Social Media
 
