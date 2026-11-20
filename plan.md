@@ -88,8 +88,8 @@ behavior exists.
 | V3 | V2 runtime | Dynamic activities, optional dependencies, and a supervisor Agent | Human UI, real publishing | A result can open a new activity while an independent activity continues |
 | V4 | V3 runtime | Durable event journal, execution history, and deterministic replay | Automatic recovery of unknown external side effects | Replaying the journal reconstructs the same shared facts and artifacts |
 | V5 | V4 runtime | Real tool adapter and Pi-backed controller behind the same Agent contract | Social-platform publishing | A real tool result enters the world only through a verified event and artifact |
-| V6 | V5 runtime | Player controls, messages, pause, reassignment, and artifact editing | Multiplayer deployment | A player intervention changes a later Agent input and preserves prior history |
-| V7 | V6 runtime | Social-media adapter for research, writing, review, and optional publishing | Making social-media the runtime's domain model | One real content goal can use Workfolk coordination while social artifacts keep their own contract |
+| V6 | V5 runtime | Read-only replay viewer with play, pause, step, reset, and Agent/event projection | Live mutation and multiplayer deployment | A player can inspect the same frames repeatedly without changing world state |
+| V7 | V6 runtime | Social-media adapter for research and writing Activities | Making social-media the runtime's domain model or publishing real content | A social brief maps to a Workfolk Goal and its Artifacts keep their own contract |
 
 ## First Implementation Check
 
@@ -123,17 +123,19 @@ implementation targets are relative to `workfolk/`:
 | V3 | `src/workfolk/supervisor.ts`, `src/workfolk/activities.ts`, `tests/test_v3_dynamic_activities.mjs` | An Artifact event opens a new Activity while an unrelated Activity remains runnable |
 | V4 | `src/workfolk/journal.ts`, `src/workfolk/replay.ts`, `tests/test_v4_replay.mjs` | A saved event journal reconstructs the same state and Artifact versions in a separate process |
 | V5 | `src/workfolk/tools.ts`, `src/workfolk/controllers.ts`, `src/workfolk/pi-controller.ts`, `tests/test_v5_tool_boundary.mjs` | A Pi-backed controller can request a tool, but only a verified tool result can publish a world event |
+| V6 | `viewer/index.html`, `viewer/app.js`, `viewer/replay-state.js`, `viewer/styles.css`, `tests/test_v6_viewer.mjs` | A replay can be played, stepped, and reset without changing its frames |
+| V7 | `src/workfolk/adapters/social-media.ts`, `tests/test_v7_social_adapter.mjs` | A social brief produces a Goal and input-bound research/writing Activities |
 
 Each version keeps the previous version's public model and event semantics. The
 runtime may change its internal storage when a version requires it, but the
 viewer and later controllers consume the same shared-world contract.
 
-The viewer is a later linked frontend module. Its first design must specify
-player actions, pending and stale states, artifact editing, and consumption of
-the backend event contract before any browser implementation begins. The
-social-media adapter is a later backend module that maps its own Brief,
-Research, Draft, Review, and publishing records into Workfolk Activities; it
-does not replace those domain contracts.
+The viewer is a linked frontend module that consumes `contracts/viewer.md` and
+the backend event contract. It begins as a read-only replay projection. Live
+player actions and artifact editing require a later frontend design checkpoint.
+The social-media adapter maps its own Brief, Research, Draft, Review, and
+publishing records into Workfolk Activities; it does not replace those domain
+contracts.
 
 ## V0 Freeze
 

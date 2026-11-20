@@ -24,6 +24,16 @@ possible arrangement inside the world, not the world model itself.
    units and their private execution loop.
 4. [`contracts/interaction.md`](contracts/interaction.md) defines commands,
    long-running activities, and world events.
+5. [`contracts/viewer.md`](contracts/viewer.md) defines the read-only replay
+   projection used by the V6 viewer.
+6. Read [`versions/v1-single-agent.md`](versions/v1-single-agent.md) through
+   [`versions/v7-social-adapter.md`](versions/v7-social-adapter.md) while
+   running the matching checks in `workfolk`.
+7. The frontend and domain-specific boundaries are described in
+   [`modules/viewer.md`](modules/viewer.md) and
+   [`modules/social-adapter.md`](modules/social-adapter.md).
 
-The current checkpoint is V0 design. It is a reviewable contract baseline and
-does not claim that the runtime is implemented.
+The V0 design is the contract baseline. V1 through V7 now have implementation
+chapters and matching runtime checkpoints in the sibling repository. The
+social-media adapter remains a pure mapping layer and does not perform real
+platform operations.
