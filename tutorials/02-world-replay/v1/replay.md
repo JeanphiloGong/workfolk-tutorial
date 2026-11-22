@@ -1,8 +1,10 @@
-# V4：事件日志和确定性回放
+# world-replay/V1 · 事件日志和确定性回放
+
+> 原型草稿。受审查后的范围和重放要求约束，见[本版实施计划](plan.md)。
 
 ## 目标和基线
 
-V3 的状态只存在于当前进程。本版加入 JSONL Journal，使另一进程可以从初始快照
+`world-runtime/V3` 的状态只存在于当前进程。本版加入 JSONL Journal，使另一进程可以从初始快照
 重新执行相同 Action，并比较每个版本的事件和状态哈希。
 
 ## 实现
@@ -35,4 +37,4 @@ node --experimental-strip-types tests/test_v4_replay.mjs
 预期输出为 `V4 deterministic replay passed`。测试在临时目录写入 JSONL，再用新
 World 重建相同 Artifact 和事件序列。
 
-V5 将把 Pi 接到 Controller 边界，世界仍通过同一个 Action 入口接收结果。
+接下来可阅读[pi-agent/V1 的实施计划](../../03-pi-agent/v1/plan.md)。

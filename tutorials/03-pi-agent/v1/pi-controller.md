@@ -1,8 +1,10 @@
-# V5：Pi Controller 和工具边界
+# pi-agent/V1 · Pi Controller 和工具边界
+
+> 原型草稿。受审查后的范围和重放要求约束，见[本版实施计划](plan.md)。
 
 ## 目标和基线
 
-V1–V4 使用确定性 Controller 验证世界规则。本版使用当前项目已经采用的 Pi
+共享世界专题使用确定性 Controller 验证世界规则。本版使用当前项目已经采用的 Pi
 Agent framework，让模型选择 Activity，同时保留 World 的写权限边界。
 
 运行仓库的 `package.json` 固定：
@@ -38,4 +40,4 @@ node --experimental-strip-types tests/test_v5_tool_boundary.mjs
 预期输出为 `V5 Pi controller and tool boundary passed`。真实联网模型需要后续
 配置 provider 和模型 ID，本版离线检查不发送请求。
 
-V6 将在独立查看器中消费回放，不让动画修改运行时状态。
+接下来可阅读[viewer/V1 的实施计划](../../04-viewer/v1/plan.md)。

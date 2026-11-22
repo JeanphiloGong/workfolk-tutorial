@@ -18,7 +18,6 @@ actions and publishes the resulting state and events.
 | `artifacts` | Versioned outputs with producer and input references |
 | `messages` | Communication facts and consumption status |
 | `events` | Confirmed changes since the requested observation point |
-| `budget` | Current limits and consumed amounts |
 
 ## Agent Visibility
 
@@ -28,7 +27,9 @@ model reasoning, credentials, or an unverified claim that work has completed.
 
 ## State Rules
 
-- A state revision changes only through an accepted environment operation.
+- A state revision changes through an accepted operation or a recorded
+  `action_rejected` Event. A rejected operation leaves business collections
+  unchanged.
 - A resource has at most one active reservation for a conflicting capability.
 - An Artifact is immutable after publication. Editing creates a new version.
 - An Activity can have multiple historical Executions, with at most one active

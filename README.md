@@ -1,39 +1,7 @@
-# Workfolk Handbook
+# Workfolk 手册
 
-This repository is the from-zero handbook for **Workfolk**, a game-like world
-where autonomous agents pursue goals, use shared resources, and adapt to each
-other's work.
+Workfolk 是一个可观察、可干预的 Agent 协作世界。Agent 围绕目标开展活动，使用共享资源，并让其他 Agent 消费自己的成果。
 
-The handbook and the runnable project are separate repositories:
+从 [教程路线图](tutorials/README.md) 按专题阅读，或从第一个项目里程碑开始动手。[项目总计划](plan.md) 说明代码基线和逐版验证方式。示例和实现目标都指向同一个相邻运行仓库 [workfolk](../workfolk)。
 
-- [`../workfolk`](../workfolk) contains the TypeScript runtime and Pi
-  integration.
-- This repository explains the design, contracts, version checkpoints, and
-  verification scenarios used to build that runtime.
-
-The core model is an event-driven autonomous world. A goal can produce many
-activities, activities can run in parallel, and new activities can be created
-when the world changes. A fixed research-to-writing-to-review pipeline is one
-possible arrangement inside the world, not the world model itself.
-
-## Reading Order
-
-1. [`plan.md`](plan.md) explains the complete loop and V0 through V7.
-2. [`contracts/world-state.md`](contracts/world-state.md) defines shared facts.
-3. [`contracts/agent-model.md`](contracts/agent-model.md) defines autonomous
-   units and their private execution loop.
-4. [`contracts/interaction.md`](contracts/interaction.md) defines commands,
-   long-running activities, and world events.
-5. [`contracts/viewer.md`](contracts/viewer.md) defines the read-only replay
-   projection used by the V6 viewer.
-6. Read [`versions/v1-single-agent.md`](versions/v1-single-agent.md) through
-   [`versions/v7-social-adapter.md`](versions/v7-social-adapter.md) while
-   running the matching checks in `workfolk`.
-7. The frontend and domain-specific boundaries are described in
-   [`modules/viewer.md`](modules/viewer.md) and
-   [`modules/social-adapter.md`](modules/social-adapter.md).
-
-The V0 design is the contract baseline. V1 through V7 now have implementation
-chapters and matching runtime checkpoints in the sibling repository. The
-social-media adapter remains a pure mapping layer and does not perform real
-platform operations.
+目前已有设计草案和七篇原型章节。逐版实施正文及其重放验证仍待构建。

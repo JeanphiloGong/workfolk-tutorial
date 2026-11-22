@@ -1,4 +1,6 @@
-# V1：一个 Agent 自主完成一项活动
+# world-runtime/V1 · 一个 Agent 自主完成一项活动
+
+> 原型草稿。受审查后的范围和重放要求约束，见[本版实施计划](plan.md)。
 
 ## 目标和基线
 
@@ -63,4 +65,4 @@ node --experimental-strip-types tests/test_v1_single_agent.mjs
 `activity_proposed`、`execution_started`、`artifact_published`、
 `activity_completed`，并确认 Agent 最后回到 `idle`。
 
-V2 将复用这些模型，加入两个 Agent 对同一资源的竞争。
+接下来可阅读[world-runtime/V2 的实施计划](../v2/plan.md)。

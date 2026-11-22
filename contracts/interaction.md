@@ -51,7 +51,8 @@ for every tool call.
 
 ## Failure Rules
 
-- A denied action leaves shared state unchanged and records the reason.
+- A denied action leaves business collections unchanged, advances the World
+  revision, and records an `action_rejected` Event with the reason.
 - A lost external result is `needs_inspection` until evidence resolves it.
 - A failed Activity may be revised or replaced while its history remains
   available.

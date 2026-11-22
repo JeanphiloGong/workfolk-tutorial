@@ -1,4 +1,6 @@
-# V3：事件驱动的动态活动
+# world-runtime/V3 · 事件驱动的动态活动
+
+> 原型草稿。受审查后的范围和重放要求约束，见[本版实施计划](plan.md)。
 
 ## 目标和基线
 
@@ -29,4 +31,4 @@ node --experimental-strip-types tests/test_v3_dynamic_activities.mjs
 预期输出为 `V3 dynamic activity routing passed`。测试确认消费者引用真实
 Artifact，独立 Activity 仍然是 `ready`。
 
-V4 将把 Action、事件类型和状态哈希写入可重放日志。
+接下来可阅读[world-replay/V1 的实施计划](../../02-world-replay/v1/plan.md)。

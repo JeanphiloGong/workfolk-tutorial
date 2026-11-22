@@ -1,156 +1,26 @@
-# Workfolk From-Zero Plan
+# Workfolk 项目总计划
 
-## Purpose
+Workfolk 用同一套 TypeScript 和 Pi 运行代码学习多 Agent 协作。玩家提出一个目标，Agent 观察共享状态并选择活动，World 裁决资源与成果交接。玩家可以在运行中改变安排，也可以事后回看一轮工作。
 
-Workfolk is a small learning project for understanding autonomous multi-agent
-coordination through a playable shared world. The player can set a goal,
-observe units working, intervene, and judge the resulting work. Agents can also
-make progress without a player assigning every intermediate step.
+教程仓库的 [专题路线图](tutorials/README.md) 提供专题入口、跨专题前置和项目里程碑。逐版实施从 [world-runtime/V1](tutorials/01-world-runtime/v1/plan.md) 开始。
 
-The game-like reference is the cooperative pressure of *Overcooked*. Its
-useful idea is a shared environment where several decision-makers affect the
-same resources and see the consequences. Workfolk adds autonomous work loops,
-long-running tools, durable artifacts, and human intervention because those
-are required for an agent office.
+## 代码基线
 
-## Complete Logic
-
-```text
-Player or supervisor creates a Goal and constraints
-  -> agents observe the current WorldState
-  -> an agent selects or proposes an Activity it can perform
-  -> the agent runs its private observe-decide-execute loop
-  -> the environment checks shared resources and records effects
-  -> an Artifact, Message, or failure Event is published
-  -> affected agents and the supervisor observe the event
-  -> activities continue, change, or produce new activities
-  -> the goal is accepted, revised, paused, or left incomplete
-```
-
-The world advances on completed commands and external results. It does not
-require every Agent to submit a synchronous movement action on every clock
-tick. A long model or browser operation is an Activity with an Execution. The
-world records its visible lifecycle while the Agent owns its private execution
-details.
-
-## Core Concepts
-
-| Concept | Responsibility |
-| --- | --- |
-| `WorldState` | Shared goals, agents, activities, resources, artifacts, messages, and current facts |
-| `Goal` | Desired outcome, constraints, budget, and acceptance conditions |
-| `Agent` | Stable actor with capabilities, a controller, private context, and current activities |
-| `Activity` | A piece of work an Agent is currently pursuing or proposing |
-| `Action` | A request to observe, reserve, start, deliver, ask, release, or complete something |
-| `Execution` | One actual run of an Activity, including external calls and result status |
-| `Resource` | A shared account, browser slot, tool, file, or other limited capability |
-| `Artifact` | A versioned output that another Agent or the player can consume |
-| `Event` | A confirmed fact that changes what other participants can observe |
-| `Message` | A communication request or response linked to an Agent and context |
-
-`Task` may be used as a user-facing assignment or work contract. It is not the
-Agent's complete behavior and it does not impose a universal stage sequence.
-
-## V0 Design and Contracts
-
-V0 delivers the complete logic, boundaries, and contracts before runtime code.
-The initial documents are:
-
-- [`contracts/world-state.md`](contracts/world-state.md)
-- [`contracts/agent-model.md`](contracts/agent-model.md)
-- [`contracts/interaction.md`](contracts/interaction.md)
-
-V0 decisions include:
-
-- Agents have private execution context and observable shared state.
-- Activities can be created from a goal, an Agent proposal, or a supervisor
-  decision.
-- The environment is the only writer of shared state.
-- Shared resource reservation and artifact publication are explicit events.
-- Long-running work is asynchronous at the world boundary.
-- A player can intervene without pretending that an animation or message means
-  a real execution completed.
-- The first runtime uses deterministic fake controllers and tools with no
-  external side effects. The runtime uses the Pi Agent framework at its
-  controller and tool boundary, while world rules remain independent of model
-  calls.
-
-V0 acceptance means the contracts explain ownership, valid transitions,
-failure paths, and the next implementation checks. It does not mean runtime
-behavior exists.
-
-## Version Line
-
-| Version | Starts from | Adds | Excludes | Acceptance |
-| --- | --- | --- | --- | --- |
-| V1 | V0 contracts | One Agent, one Goal, one fake tool, and a private execution loop | Multiple agents, UI, external tools | A fixed input produces a deterministic Artifact and Event sequence |
-| V2 | V1 runtime | Two autonomous Agents sharing a resource and observing each other's events | LLMs, browsers, persistent database | One Agent waits or changes activity when the resource is occupied; the other continues |
-| V3 | V2 runtime | Dynamic activities, optional dependencies, and a supervisor Agent | Human UI, real publishing | A result can open a new activity while an independent activity continues |
-| V4 | V3 runtime | Durable event journal, execution history, and deterministic replay | Automatic recovery of unknown external side effects | Replaying the journal reconstructs the same shared facts and artifacts |
-| V5 | V4 runtime | Real tool adapter and Pi-backed controller behind the same Agent contract | Social-platform publishing | A real tool result enters the world only through a verified event and artifact |
-| V6 | V5 runtime | Read-only replay viewer with play, pause, step, reset, and Agent/event projection | Live mutation and multiplayer deployment | A player can inspect the same frames repeatedly without changing world state |
-| V7 | V6 runtime | Social-media adapter for research and writing Activities | Making social-media the runtime's domain model or publishing real content | A social brief maps to a Workfolk Goal and its Artifacts keep their own contract |
-
-## First Implementation Check
-
-The first executable scenario is deliberately small:
-
-```text
-Goal: produce a short structured briefing from a supplied source
-Agent: one autonomous research worker
-Tool: deterministic local source reader
-Result: one versioned briefing artifact
-```
-
-The test must show the Agent choosing its activity, executing it, publishing an
-artifact, and causing a world event. A caller that directly inserts the
-artifact without running the Agent loop does not satisfy V1.
-
-## V0 Implementation Handoff
-
-The current runtime baseline is the sibling repository
-`../workfolk`. It contains `package.json`, the TypeScript package at
-`src/workfolk/index.ts`, and no domain behavior. V0 therefore ends with
-design readiness. It does not claim that the first scenario already runs.
-
-The backend module owns the world rules and the shared contracts. Proposed
-implementation targets are relative to `workfolk/`:
-
-| Version | Runtime targets | Reader check |
+| 用途 | Workfolk 提交 | 核对结果 |
 | --- | --- | --- |
-| V1 | `src/workfolk/model.ts`, `src/workfolk/world.ts`, `src/workfolk/agents.ts`, `tests/test_v1_single_agent.mjs` | A scripted Agent selects one Activity, runs the deterministic source tool, publishes one Artifact, and emits the expected events |
-| V2 | `src/workfolk/resources.ts`, `src/workfolk/world.ts`, `src/workfolk/agents.ts`, `tests/test_v2_shared_resource.mjs` | Two Agents observe one exclusive resource; the losing Agent waits or changes Activity while the other continues |
-| V3 | `src/workfolk/supervisor.ts`, `src/workfolk/activities.ts`, `tests/test_v3_dynamic_activities.mjs` | An Artifact event opens a new Activity while an unrelated Activity remains runnable |
-| V4 | `src/workfolk/journal.ts`, `src/workfolk/replay.ts`, `tests/test_v4_replay.mjs` | A saved event journal reconstructs the same state and Artifact versions in a separate process |
-| V5 | `src/workfolk/tools.ts`, `src/workfolk/controllers.ts`, `src/workfolk/pi-controller.ts`, `tests/test_v5_tool_boundary.mjs` | A Pi-backed controller can request a tool, but only a verified tool result can publish a world event |
-| V6 | `viewer/index.html`, `viewer/app.js`, `viewer/replay-state.js`, `viewer/styles.css`, `tests/test_v6_viewer.mjs` | A replay can be played, stepped, and reset without changing its frames |
-| V7 | `src/workfolk/adapters/social-media.ts`, `tests/test_v7_social_adapter.mjs` | A social brief produces a Goal and input-bound research/writing Activities |
+| V1 学习起点 | `ca20e2f` | `src/workfolk/index.ts` 只有入口与版本，依赖已锁定 |
+| 已有原型 | `1a867c7` | 有世界、Pi 回复映射、静态回放和内容字段映射，审查时的七项检查均通过 |
 
-Each version keeps the previous version's public model and event semantics. The
-runtime may change its internal storage when a version requires it, but the
-viewer and later controllers consume the same shared-world contract.
+原型用来核对现有代码和路径。实现章从学习起点复现时，以前一版实际通过的检查点为基线。首次重放完成后记录其可复现标识。详见 [共享世界 V0](tutorials/01-world-runtime/v0/plan.md)。
 
-The viewer is a linked frontend module that consumes `contracts/viewer.md` and
-the backend event contract. It begins as a read-only replay projection. Live
-player actions and artifact editing require a later frontend design checkpoint.
-The social-media adapter maps its own Brief, Research, Draft, Review, and
-publishing records into Workfolk Activities; it does not replace those domain
-contracts.
+## 教程怎样交付
 
-## V0 Freeze
+1. 每个专题的 `plan.md` 负责选题、版本顺序和跨专题前置。V0 解释业务规则，引用唯一的共享契约。实现版的 `plan.md` 给出变更位置、完整教程入口和验收场景。
+2. 每版正文给出从该版基线到结果的顺序、完整修改、调用方和可执行检查。先在隔离副本中按章重放，再跑所属项目里程碑的集成检查。
+3. 检查点只有在本版检查及相关回归通过后才能标记为已验证。最新原型的测试结果和教程逐章重放结果各自记录。
 
-V0 is ready for the implementation tutorial when the three contract documents
-and this plan agree on Agent ownership, Activity lifecycle, resource
-reservation, Artifact immutability, asynchronous Execution results, failure
-events, and the V1 check above. The initial world implementation remains free
-of browser, database, and network effects. The runtime package records the
-existing Pi dependency so the V5 controller can use the established framework.
-A later implementation checkpoint may invoke Pi or another external tool only
-when its version includes a concrete reader check.
+## 工作边界
 
-## Boundary With Social Media
+Workfolk 管理共享状态、活动、执行、资源和成果。Pi 1.4.0 负责模型会话与工具循环。网页使用由运行时拥有的本地 HTTP 契约。社交场景用一个实际走完的本地草稿验证领域接入，现有社交应用的发布与授权仍归其自身维护。
 
-Workfolk owns coordination mechanics. The `social-media` project owns its
-content rules, strategy selection, review evidence, browser operations, account
-authorization, and publishing records. An adapter may translate a social goal
-into Workfolk activities after the generic runtime is verified.
+各专题 V0 的当前状态和待定选择见 [教程路线图](tutorials/README.md)。

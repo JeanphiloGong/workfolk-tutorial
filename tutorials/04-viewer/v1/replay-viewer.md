@@ -1,8 +1,10 @@
-# V6：只读回放查看器
+# viewer/V1 · 只读回放查看器
+
+> 原型草稿。受审查后的范围和重放要求约束，见[本版实施计划](plan.md)。
 
 ## 目标和基线
 
-V5 已经有可以回放的世界事实。本版增加一个静态浏览器查看器，展示 Agent、当前
+回放专题已经有可以回放的世界事实。原型增加了一个静态浏览器查看器，展示 Agent、当前
 活动和事件时间线，支持播放、单步和重置。它不拥有领域规则，也不执行 Agent。
 
 ## 实现
@@ -31,4 +33,4 @@ node --check viewer/replay-state.js
 预期输出为 `V6 replay viewer state passed`，并且两个 JavaScript 文件语法检查
 通过。浏览器验证应确认播放、单步和重置只改变显示帧。
 
-V7 将把社交内容 Brief 映射成 Workfolk Goal 和 Activity。
+接下来可阅读[social-adapter/V1 的实施计划](../../05-social-adapter/v1/plan.md)。

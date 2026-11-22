@@ -1,8 +1,8 @@
 # Viewer Contract
 
-The Workfolk viewer is a read-only projection of a replay or live world
-snapshot. It displays the latest shared facts and event history without owning
-world rules or changing an Agent's state.
+The Workfolk viewer displays a replay or live World snapshot and sends explicit
+player commands through the local runtime boundary. It owns the display frame
+and pending UI state. The runtime owns World rules and all state changes.
 
 ## Replay Input
 
@@ -22,6 +22,18 @@ is an invalid input and must be reported before rendering.
 - `Play` advances one frame at a time until the last frame.
 - `Step` advances one frame and stops at the last frame.
 - `Reset` returns the pointer to frame zero.
-- The pointer changes only the projection. It cannot call a runtime operation.
-- A later live view may display pending, stale, or failed states from the
-  runtime event contract. It must not infer completion from animation timing.
+- The pointer changes only the projection.
+- A live message, pause request, or reassignment is submitted to POST /actions
+  and remains pending until the response contains a confirmed Transition or an
+  explicit rejection.
+- GET /world returns the World snapshot and recent Events. A stale response
+  cannot overwrite a newer revision.
+- The viewer must not infer completion from animation timing.
+
+## Local HTTP Contract
+
+GET /world returns a World snapshot and recent events.
+
+POST /actions accepts one player Action and returns the resulting Transition or
+a rejection. The server owns the active World instance. Browser code does not
+import or duplicate the runtime domain rules.

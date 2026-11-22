@@ -1,4 +1,6 @@
-# V2：两个 Agent 共享资源
+# world-runtime/V2 · 两个 Agent 共享资源
+
+> 原型草稿。受审查后的范围和重放要求约束，见[本版实施计划](plan.md)。
 
 ## 目标和基线
 
@@ -37,4 +39,4 @@ node --experimental-strip-types tests/test_v2_shared_resource.mjs
 预期输出为 `V2 shared-resource coordination passed`。测试确认只有一个活动预留
 浏览器，另一个活动进入 `waiting`，资源释放后它可以重新进入 `ready`。
 
-V3 将使用事件和输入 Artifact 动态打开后续 Activity。
+接下来可阅读[world-runtime/V3 的实施计划](../v3/plan.md)。
