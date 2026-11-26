@@ -1,5 +1,7 @@
 # Workfolk 手册
 
+- [Workfolk Agent Kernel 总体方案](plans/agent-kernel-platform.md)
+
 Workfolk 是一个可观察、可干预的 Agent 协作世界。Agent 围绕目标开展活动，使用共享资源，并让其他 Agent 消费自己的成果。
 
 从 [教程路线图](tutorials/README.md) 按专题阅读，或从第一个项目里程碑开始动手。[项目总计划](plan.md) 说明代码基线和逐版验证方式。示例和实现目标都指向同一个相邻运行仓库 [workfolk](../workfolk)。

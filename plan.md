@@ -4,6 +4,8 @@ Workfolk 用同一套 TypeScript 和 Pi 运行代码学习多 Agent 协作。玩
 
 教程仓库的 [专题路线图](tutorials/README.md) 提供专题入口、跨专题前置和项目里程碑。逐版实施从 [world-runtime/V1](tutorials/01-world-runtime/v1/plan.md) 开始。
 
+Workfolk Kernel Platform 的整体方案见 [plans/agent-kernel-platform.md](plans/agent-kernel-platform.md)。Workfolk 是该方案的实现产品，Workfolk Shared World、Multica-style App 和 Orca-style App 都在同一 Kernel 上演进。
+
 ## 代码基线
 
 | 用途 | Workfolk 提交 | 核对结果 |
